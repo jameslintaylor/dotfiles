@@ -1,5 +1,5 @@
 # tmux plz
-echo $TERM | grep -qv '^screen'; and exec tmux
+# echo $TERM | grep -qv '^screen'; and exec tmux
 
 function swap 
 	set tmp $argv[1].tmp

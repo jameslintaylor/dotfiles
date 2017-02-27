@@ -4,8 +4,8 @@ module.exports = {
 
 		shell: '/usr/local/bin/fish',
 
-		fontSize: 11,
-		fontFamily: 'Menlo, "DejaVu Sans Mono", "Lucida Console", monospace',
+		fontSize: 12,
+		fontFamily: 'Share Tech Mono, Source Code Pro, Menlo, "DejaVu Sans Mono", "Lucida Console", monospace',
 		cursorColor: 'white',
 		cursorShape: 'BLOCK',
 
@@ -63,6 +63,6 @@ module.exports = {
 	// `~/.hyperterm_modules/local/` and include it here
 	// to load it and avoid it being `npm install`ed
 	localPlugins: [
-		/* 'playground' */
+		'playground'
 	]
 };
