@@ -1,0 +1,38 @@
+clear Lock
+clear Control
+clear Mod1
+clear Mod2
+clear Mod3
+clear Mod4
+
+! tab/backslash -> super
+keycode 23 = Super_L
+keycode 51 = Super_R
+
+! caps/return -> control
+keycode 66 = Control_L
+keycode 36 = Control_R
+
+! control -> hyper
+keycode 9 = Hyper_L
+keycode 105 = Hyper_R
+
+! super -> alt
+keycode 133 = Alt_L
+keycode 134 = Alt_R
+
+! alt -> meta
+keycode 64 = Meta_L
+keycode 108 = Meta_R
+
+! unused keycodes -> things we still need!!!
+keycode 255 = Tab
+keycode 254 = backslash bar
+keycode 253 = Return
+keycode 252 = Escape
+
+add Control = Control_L Control_R
+add Mod1 = Meta_L Meta_R
+add Mod2 = Alt_L Alt_R
+add Mod3 = Hyper_L Hyper_R
+add Mod4 = Super_L Super_R
