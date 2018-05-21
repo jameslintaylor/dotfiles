@@ -1,0 +1,108 @@
+/* -*- mode: css -*- */
+
+/*******************************************************************************
+ * bio-digital-jazz color theme for rofi
+ * User: jet
+ * Copyright: jet
+********************************************************************************/
+
+configuration {
+    display-ssh: "ssh";
+    display-run: "run";
+    display-drun: "run";
+    display-window: "window";
+    display-combi: "";
+    width: 100;
+    location: 1;
+    terminal: "urxvt";
+    scroll-method: 1;
+}
+
+* {
+    text-color: #000;
+    background-color: #385;
+    font: "Fira Mono Bold 20";
+}
+
+#window {
+    /* background-color: @base00; */
+    background-color: rgba(8, 14, 20, 90%);
+    border-color: #152;
+    border: 0 0 5 0;
+}
+
+#mainbox {
+    spacing: 0;
+    padding: 0;
+    children: [ inputbar, message, listview ];
+}
+
+#inputbar {
+    text-color: black;
+    padding: 0;
+    children: [ prompt, textbox-prompt-colon, entry, case-indicator ];
+}
+
+#prompt {
+    padding: 0 0 0 4;
+}
+
+#textbox-prompt-colon {
+    expand: false;
+    str: "";
+    margin: 0 0 0 0;
+}
+
+#message {
+    text-color: white;
+    background-color: green;
+}
+
+#listview {
+    padding: 0;
+}
+
+#element {
+    padding: 3 0 3 24;
+}
+
+#element selected.normal {
+    background-color: #000;
+    text-color: #fff;
+    border-color: #000;
+    border: 1;
+}
+
+#element normal.active {
+    text-color: #fff;
+    background-color: #f40;
+}
+
+#element selected.active {
+    text-color: white;
+    background-color: black;
+}
+
+#element selected.urgent {
+    foreground: black;
+}
+
+#element normal.normal {
+    text-color: black;
+}
+
+#vertb {
+    expand: false;
+    children: [ dummy0, sidebar, dummy1  ];
+}
+
+#dummy0,  dummy1 {
+    expand: true;
+}
+
+#sidebar {
+    expand: false;
+    orientation: vertical;
+    spacing: 0px;
+    border: 0px 0px 0px 0px;
+}
