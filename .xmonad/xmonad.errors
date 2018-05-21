@@ -1,0 +1,19 @@
+
+xmonad.hs:111:71: warning: [-Woverflowed-literals]
+    Literal -10 is out of the GHC.Word.Word32 range 0..4294967295
+    |
+111 |     [ ((modm .|. mod1Mask, xK_minus), withFocused (keysResizeWindow (-10, -10) (1%2, 1%2)))
+    |                                                                       ^^
+
+xmonad.hs:111:76: warning: [-Woverflowed-literals]
+    Literal -10 is out of the GHC.Word.Word32 range 0..4294967295
+    |
+111 |     [ ((modm .|. mod1Mask, xK_minus), withFocused (keysResizeWindow (-10, -10) (1%2, 1%2)))
+    |                                                                            ^^
+
+xmonad.hs:134:8: warning: [-Wtabs]
+    Tab character found here, and in one further location.
+    Please use spaces instead.
+    |
+134 |   where bsp = renamed [Replace "bsp"] $ smartSpacingWithEdge 4 emptyBSP 
+    |        ^

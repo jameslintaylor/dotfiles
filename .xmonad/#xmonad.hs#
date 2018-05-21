@@ -1,0 +1,156 @@
+import System.IO
+import System.Exit
+import Data.Ratio ((%))
+
+import XMonad
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
+
+import XMonad.Actions.FloatKeys
+
+import XMonad.Layout.Spacing
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Renamed
+
+import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.EZConfig(additionalKeys)
+
+import qualified XMonad.StackSet as W
+import qualified Data.Map as M
+
+myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+ 
+    -- launch a terminal
+    [ ((modm, xK_Return), spawn $ XMonad.terminal conf)
+ 
+    -- close focused window
+    , ((modm, xK_0), kill)
+ 
+     -- Rotate through the available layout algorithms
+    , ((modm, xK_space), sendMessage NextLayout)
+ 
+    --  Reset the layouts on the current workspace to default
+    , ((modm, xK_equal), setLayout $ XMonad.layoutHook conf)
+
+    -- Move focus to the master window
+    , ((modm, xK_m), windows W.focusMaster)
+
+    -- Move focus to the next window
+    , ((modm, xK_j), windows W.focusDown)
+ 
+    -- Move focus to the previous window
+    , ((modm, xK_k), windows W.focusUp)
+ 
+    -- Swap the focused window and the master window
+    , ((modm .|. mod1Mask, xK_m), windows W.swapMaster)
+ 
+    -- Swap the focused window with the next window
+    , ((modm, xK_t), windows W.swapDown)
+ 
+    -- Swap the focused window with the previous window
+    , ((modm .|. mod1Mask, xK_t), windows W.swapUp)
+
+    -- Shrink the master area
+    , ((modm, xK_h), sendMessage Shrink)
+ 
+    -- Expand the master area
+    , ((modm, xK_l), sendMessage Expand)
+ 
+    -- Increment the number of windows in the master area
+    , ((modm .|. shiftMask, xK_9), sendMessage (IncMasterN 1))
+ 
+    -- Decrement the number of windows in the master area
+    , ((modm .|. shiftMask, xK_bracketleft ), sendMessage (IncMasterN (-1)))
+ 
+    -- Toggle the status bar gap
+    -- Use this binding with avoidStruts from Hooks.ManageDocks.
+    -- See also the statusBar function from Hooks.DynamicLog.
+    --
+    , ((modm, xK_b), sendMessage ToggleStruts)
+ 
+    -- Quit xmonad
+    , ((modm .|. shiftMask, xK_q), io (exitWith ExitSuccess))
+ 
+    -- Restart xmonad
+    , ((modm, xK_r), spawn "xmonad --recompile; xmonad --restart")
+    ]
+    
+    ++
+
+    --
+    -- mod-[1..9], Switch to workspace N
+    --
+    -- mod-[1..9], Switch to workspace N
+    -- mod-shift-[1..9], Move client to workspace N
+    --
+    [((m .|. modm, k), windows $ f i)
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+
+    ++
+
+    -- floating windows
+    [ ((modm .|. mod1Mask, xK_minus), withFocused (keysResizeWindow (-10, -10) (1%2, 1%2)))
+    -- Center window
+    , ((modm .|. mod1Mask, xK_c), withFocused (keysMoveWindowTo (1440, 900) (1%2, 1%2)))
+    -- Push window back into tiling
+    , ((modm .|. mod1Mask, xK_s), withFocused $ windows . W.sink)
+    ]
+    
+    ++
+
+    -- rofi
+    [ ((modm, xK_x), spawn "rofi -show run")
+    , ((modm, xK_w), spawn "rofi -show window")
+    , ((modm, xK_p), spawn "rofi-pass")]
+
+myManageHook :: ManageHook
+myManageHook = composeAll . concat $
+    [ [ title =? t --> doFloat | t <- myTitleFloats]
+    , [ className =? c --> doFloat | c <- myClassFloats ] ]
+    where
+      myTitleFloats = ["pinentry-gtk-2"]
+      myClassFloats = []
+    
+myLayoutHook = avoidStruts $ smartBorders $ tiled ||| full
+  where
+    
+    tiled = renamed [Replace "tiled"] $ smartSpacingWithEdge 7 $ Tall nmaster delta ratio
+    nmaster = 1
+    delta = 3/100
+    ratio = 1/2
+
+    full = renamed [Replace "full"] Full
+
+myHandleEventHook = docksEventHook <+> ewmhDesktopsEventHook
+
+main = do
+  xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
+  xmonad $ ewmh myDefaults
+    -- xmobar stdin
+    { logHook = dynamicLogWithPP $ xmobarPP
+      { ppOutput = hPutStrLn xmproc
+      , ppTitle = xmobarColor "#2f394d" "" . shorten 20
+      , ppCurrent = xmobarColor "#e7ffff" ""
+      , ppSep = " "
+      }
+    }
+
+myDefaults = defaultConfig
+    -- simple stuff
+    { terminal = "xterm"
+    , modMask = mod4Mask
+    , focusFollowsMouse = False
+    , borderWidth = 3
+    , normalBorderColor = "#0c141f"
+    , focusedBorderColor = "#e7ffff"
+
+    -- key bindings
+    , keys = myKeys
+
+    -- hooks, layout
+    , layoutHook = myLayoutHook
+    , manageHook = myManageHook
+    , handleEventHook = myHandleEventHook
+    }
